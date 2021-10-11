@@ -3,28 +3,20 @@ package com.example.characterproject;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import java.util.Calendar;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity {
     int dateEndY, dateEndM, dateEndD;
     int ddayValue = 0;
     SharedPreferences sharedPreferences;
-    MyReceiver receiver;
     // 현재 날짜를 알기 위해 사용
     Calendar calendar;
     int currentYear, currentMonth, currentDay;
@@ -41,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Locale.setDefault(Locale.KOREAN);
 
         //시작일, 종료일 데이터 저장
         calendar = Calendar.getInstance();
@@ -49,37 +42,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         currentDay = calendar.get(Calendar.DAY_OF_MONTH);
         simple_CharMan =findViewById(R.id.simple_CharMan);
         simple_CharWoman=findViewById(R.id.simple_CharWoman);
-        simple_CharWoman.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent =new Intent(MainActivity.this,WomanActivity.class);
-                startActivity(intent);
-            }
-        });
-
-//        sharedPreferences =getSharedPreferences("pref",MODE_PRIVATE);
-//        SharedPreferences.Editor editor=sharedPreferences.edit();
-//        int s=sharedPreferences.getInt("image",0);
-//        woman_hair1.setImageResource(s);
-
-        datePicker = findViewById(R.id.datePicker);
-        edit_endDateBtn = (TextView) findViewById(R.id.edit_endDateBtn);
-        edit_result = (TextView) findViewById(R.id.edit_result);
 
         sharedPreferences =getSharedPreferences("pref",MODE_PRIVATE);
         d_result=sharedPreferences.getLong("result",0);
 
-        Intent serviceIntent =new Intent(getApplicationContext(),MyService.class);
-        serviceIntent.putExtra("re",d_result);
-        Log.d("datePicker",String.valueOf(d_result));
-        startService(serviceIntent);
 
-        receiver = new MyReceiver();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction("com.example.broadcast.show");
-        registerReceiver(receiver, filter);
-
-        Locale.setDefault(Locale.KOREAN);
+        datePicker = findViewById(R.id.datePicker);
+        edit_endDateBtn = (TextView) findViewById(R.id.edit_endDateBtn);
+        edit_result = (TextView) findViewById(R.id.edit_result);
 
         // 디데이 날짜 입력
         edit_endDateBtn.setText("우리가 만난 날짜 : " +currentYear + "년 " + (currentMonth + 1) + "월 " + currentDay + "일");
@@ -90,29 +60,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(View view) {
                 new DatePickerDialog(MainActivity.this, endDateSetListener, (currentYear), (currentMonth), currentDay).show();
             }
+        });
 
+        simple_CharWoman.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent =new Intent(MainActivity.this,WomanActivity.class);
+                startActivity(intent);
+            }
+        });
+        simple_CharMan.setOnClickListener(v -> {
+            Intent intent =new Intent(MainActivity.this,ManActivity.class);
+            startActivity(intent);
         });
     }
-    public void setImage(int d){
-        sharedPreferences =getSharedPreferences("pref",MODE_PRIVATE);
-        SharedPreferences.Editor editor=sharedPreferences.edit();
-        editor.putInt("image",R.drawable.woman_hair1);
-        editor.commit();
-    }
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()){
 
-        }
-
-    }
-    /** @brief endDateSetListener
-     *  @date 2016-02-18
-     *  @detail DatePickerDialog띄우기, 종료일 저장, 기존에 입력한 값이 있으면 해당 데이터 설정후 띄우기
-     *
-     *
-     */
-
+    //DatePickerDialog띄우기, 종료일 저장, 기존에 입력한 값이 있으면 해당 데이터 설정후 띄우기
     private DatePickerDialog.OnDateSetListener endDateSetListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -122,12 +85,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     };
 
-
-    /** @brief getDday
-     *  @date 2016-02-18
-     *  @param mYear : 설정한 디데이 year, mMonthOfYear : 설정한 디데이 MonthOfYear, mDayOfMonth : 설정한 디데이 DayOfMonth
-     *  @detail D-day 반환
-     */
+    // 설정한 디데이 year, mMonthOfYear : 설정한 디데이 MonthOfYear, mDayOfMonth : 설정한 디데이 DayOfMonth
     private String getDday(int mYear, int mMonthOfYear, int mDayOfMonth) {
 
         // D-day 설정
@@ -152,11 +110,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         final String strCount = (String.format(strFormat, result));
         return strCount;
     }
-
-    /** @brief onPhotoDialog
-     *  @date 2016-02-18
-     *  @detail 디데이 값 계산
-     *  */
+    //디데이값 계산
     public int onCalculatorDate (int dateEndY, int dateEndM, int dateEndD) {
         try {
             Calendar today = Calendar.getInstance(); //현재 오늘 날짜
@@ -184,36 +138,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    /** @brief ddayResult_int
-     *  @date 2016-02-18
-     *  @detail 디데이 값 계산한 값 결과값 출력
-     *  Todo 함수 오류 수정
-     *  */
     public int ddayResult_int(int dateEndY, int dateEndM, int dateEndD) {
         int result = 0;
-
         result = onCalculatorDate(dateEndY, dateEndM, dateEndD);
-
         return result;
     }
 
-
-    class MyReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Long mResult = intent.getLongExtra("re", 0);
-            if(intent != null){
-                Log.d("intent",mResult+"");
-                edit_result.setText("우리가 사랑한지 D+ : "+mResult);
-                sharedPreferences =getSharedPreferences("pref",MODE_PRIVATE);
-                SharedPreferences.Editor editor=sharedPreferences.edit();
-                editor.putLong("result",mResult);
-                editor.commit();
-                Toast.makeText(getApplicationContext(), "myReceiver", Toast.LENGTH_SHORT).show();
-            }
-
-
-        }
-    }
 
 }
