@@ -3,6 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/AndroidProject/CharacterProject/app/src/main/res/drawable/edt_color.xml" value="0.35625" />
+        <entry key="..\:/AndroidProject/CharacterProject/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/AndroidProject/CharacterProject/app/src/main/res/layout/activity_man.xml" value="0.17708333333333334" />
+        <entry key="..\:/AndroidProject/CharacterProject/app/src/main/res/layout/activity_woman.xml" value="0.17708333333333334" />
         <entry key="..\:/heoAndroid/CharacterProject/app/src/main/res/drawable/edt_color.xml" value="0.365625" />
         <entry key="..\:/heoAndroid/CharacterProject/app/src/main/res/drawable/ic_launcher_background.xml" value="0.20989583333333334" />
         <entry key="..\:/heoAndroid/CharacterProject/app/src/main/res/layout/activity_main.xml" value="0.22" />
@@ -10,7 +14,7 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

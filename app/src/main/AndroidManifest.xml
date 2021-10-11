@@ -10,6 +10,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CharacterProject">
         <activity
+            android:name=".WomanActivity"
+            android:exported="true" />
+        <activity
+            android:name=".ManActivity"
+            android:exported="true" />
+
+        <service
+            android:name=".MyService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
