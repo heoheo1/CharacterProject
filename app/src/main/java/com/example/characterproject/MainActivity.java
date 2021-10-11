@@ -51,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
         edit_endDateBtn = (TextView) findViewById(R.id.edit_endDateBtn);
         edit_result = (TextView) findViewById(R.id.edit_result);
 
+
+        edit_result.setText("우리가 사랑 한지 : D+"+d_result);
         // 디데이 날짜 입력
         edit_endDateBtn.setText("우리가 만난 날짜 : " +currentYear + "년 " + (currentMonth + 1) + "월 " + currentDay + "일");
 
@@ -108,6 +110,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         final String strCount = (String.format(strFormat, result));
+        sharedPreferences =getSharedPreferences("pref",MODE_PRIVATE);
+        SharedPreferences.Editor editor =sharedPreferences.edit();
+        editor.putLong("result",result);
         return strCount;
     }
     //디데이값 계산
