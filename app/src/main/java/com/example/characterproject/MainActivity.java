@@ -6,11 +6,16 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
@@ -18,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     int ddayValue = 0;
     SharedPreferences sharedPreferences;
     // 현재 날짜를 알기 위해 사용
-    Calendar calendar;
+    Calendar calendar,maxDate;
     int currentYear, currentMonth, currentDay;
 
     // Millisecond 형태의 하루(24 시간)
@@ -37,30 +42,62 @@ public class MainActivity extends AppCompatActivity {
 
         //시작일, 종료일 데이터 저장
         calendar = Calendar.getInstance();
+        maxDate = Calendar.getInstance();
         currentYear = calendar.get(Calendar.YEAR);
         currentMonth = (calendar.get(Calendar.MONTH));
         currentDay = calendar.get(Calendar.DAY_OF_MONTH);
         simple_CharMan =findViewById(R.id.simple_CharMan);
         simple_CharWoman=findViewById(R.id.simple_CharWoman);
+        maxDate.set(currentYear,currentMonth,currentDay);
+
 
         sharedPreferences =getSharedPreferences("pref",MODE_PRIVATE);
         d_result=sharedPreferences.getLong("result",0);
+        int year=sharedPreferences.getInt("year",0);
+        int monthOfYear= sharedPreferences.getInt("monthOfYear",0);
+        int dayOfMonth=sharedPreferences.getInt("dayOfMonth",0);
+        int cyear=sharedPreferences.getInt("cyear",currentYear);
+        int cmonth= sharedPreferences.getInt("cmonth",currentMonth+1);
+        int cday=sharedPreferences.getInt("cday",currentDay);
+         String d_now=cyear+""+cmonth+""+cday+"";
+        Log.d("hhhh",""+cyear+cmonth+cday);
+        Log.d("hhhh",""+currentYear+(currentMonth+1)+currentDay);
+        String now=currentYear+""+(currentMonth+1)+""+currentDay+"";
 
+
+        if (!(d_now.equals(now))){
+          d_result+=1;
+          SharedPreferences.Editor editor =sharedPreferences.edit();
+          editor.putInt("cyear",currentYear);
+          editor.putInt("cmonth",currentMonth+1);
+          editor.putInt("cday",currentDay);
+          editor.putLong("result",d_result);
+          editor.commit();
+        }
 
         datePicker = findViewById(R.id.datePicker);
-        edit_endDateBtn = (TextView) findViewById(R.id.edit_endDateBtn);
-        edit_result = (TextView) findViewById(R.id.edit_result);
+        edit_endDateBtn =findViewById(R.id.edit_endDateBtn);
+        edit_result =  findViewById(R.id.edit_result);
 
 
-        edit_result.setText("우리가 사랑 한지 : D+"+d_result);
+        if(d_result>0) {
+            d_result=sharedPreferences.getLong("result",0);
+            edit_result.setText("우리가 사랑 한지 : D+" + d_result);
+            edit_endDateBtn.setText("우리가 만난 날짜 : " +year + "년 " + monthOfYear  + "월 " + dayOfMonth + "일");
+            Log.d("hhhh",""+year+monthOfYear+dayOfMonth);
+        }
+
         // 디데이 날짜 입력
-        edit_endDateBtn.setText("우리가 만난 날짜 : " +currentYear + "년 " + (currentMonth + 1) + "월 " + currentDay + "일");
+
 
         //datePicker : 디데이 날짜 입력하는 버튼, 클릭시 DatePickerDialog 띄우기
         datePicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new DatePickerDialog(MainActivity.this, endDateSetListener, (currentYear), (currentMonth), currentDay).show();
+                DatePickerDialog dialog = new DatePickerDialog(MainActivity.this, endDateSetListener, (currentYear), (currentMonth), currentDay);
+                dialog.getDatePicker().setMaxDate(maxDate.getTimeInMillis());
+
+                dialog.show();
             }
         });
 
@@ -82,8 +119,15 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
             edit_endDateBtn.setText("우리가 만난 날짜 : " +year + "년 " + (monthOfYear + 1) + "월 " + dayOfMonth + "일");
+            sharedPreferences =getSharedPreferences("pref",MODE_PRIVATE);
+            SharedPreferences.Editor editor =sharedPreferences.edit();
+            editor.putInt("year",year);
+            editor.putInt("monthOfYear",monthOfYear + 1);
+            editor.putInt("dayOfMonth",dayOfMonth);
+            editor.commit();
             ddayValue = ddayResult_int(dateEndY, dateEndM, dateEndD);
             edit_result.setText(getDday(year, monthOfYear, dayOfMonth));
+
         }
     };
 
@@ -101,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
         // 출력 시 d-day 에 맞게 표시
         String strFormat;
         if (result > 0) {
-            strFormat = "D-%d";
+            strFormat = "날짜를 다시 선택해주세요.";
         } else if (result == 0) {
             strFormat = "Today";
         } else {
@@ -113,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
         sharedPreferences =getSharedPreferences("pref",MODE_PRIVATE);
         SharedPreferences.Editor editor =sharedPreferences.edit();
         editor.putLong("result",result);
+        editor.commit();
         return strCount;
     }
     //디데이값 계산
@@ -126,6 +171,13 @@ public class MainActivity extends AppCompatActivity {
             int cyear = calendar.get(Calendar.YEAR);
             int cmonth = (calendar.get(Calendar.MONTH) + 1);
             int cday = calendar.get(Calendar.DAY_OF_MONTH);
+
+            sharedPreferences =getSharedPreferences("pref",MODE_PRIVATE);
+            SharedPreferences.Editor editor =sharedPreferences.edit();
+            editor.putInt("cyear",cyear);
+            editor.putInt("cmonth",cmonth);
+            editor.putInt("cday",cday);
+            editor.commit();
 
             today.set(cyear, cmonth, cday);
             dday.set(dateEndY, dateEndM, dateEndD);// D-day의 날짜를 입력합니다.
