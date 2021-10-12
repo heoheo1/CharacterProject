@@ -6,16 +6,11 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
@@ -25,14 +20,56 @@ public class MainActivity extends AppCompatActivity {
     // 현재 날짜를 알기 위해 사용
     Calendar calendar,maxDate;
     int currentYear, currentMonth, currentDay;
-
     // Millisecond 형태의 하루(24 시간)
     private final int ONE_DAY = 24 * 60 * 60 * 1000;
 
     TextView edit_endDateBtn, edit_result;
     ImageView datePicker;
     Long d_result;
-    ImageView simple_CharMan,simple_CharWoman;
+    ImageView simple_CharMan,man_hair,man_clothes,man_shoes,man_Accessories;
+    ImageView simple_CharWoman,woman_hair,woman_clothes,woman_shoes,woman_Accessories;
+    TextView char_man,char_Woman;
+
+
+    public void init( ){
+        simple_CharMan =findViewById(R.id.simple_CharMan);
+        man_hair=findViewById(R.id.man_hair);
+        man_clothes=findViewById(R.id.man_clothes);
+        man_shoes=findViewById(R.id.man_shoes);
+        man_Accessories=findViewById(R.id.man_Accessories);
+        simple_CharWoman=findViewById(R.id.simple_CharWoman);
+        woman_hair=findViewById(R.id.woman_hair);
+        woman_clothes=findViewById(R.id.woman_clothes);
+        woman_shoes=findViewById(R.id.woman_shoes);
+        woman_Accessories=findViewById(R.id.woman_Accessories);
+        datePicker = findViewById(R.id.datePicker);
+        edit_endDateBtn =findViewById(R.id.edit_endDateBtn);
+        edit_result =  findViewById(R.id.edit_result);
+        char_man =findViewById(R.id.char_man);
+        char_Woman=findViewById(R.id.char_Woman);
+    }
+
+    public void img_Upload(){
+        sharedPreferences =getSharedPreferences("pref",MODE_PRIVATE);
+        int womanhair=sharedPreferences.getInt("womanhair",0);
+        int womanclothes=sharedPreferences.getInt("womanclothes",0);
+        int womanshoes=sharedPreferences.getInt("womanshoes",0);
+        int womanaccessories=sharedPreferences.getInt("womanaccessories",0);
+        woman_hair.setImageResource(womanhair);
+        woman_clothes.setImageResource(womanclothes);
+        woman_shoes.setImageResource(womanshoes);
+        woman_Accessories.setImageResource(womanaccessories);
+
+        int manhair=sharedPreferences.getInt("manhair",0);
+        int manclothes=sharedPreferences.getInt("manclothes",0);
+        int manshoes=sharedPreferences.getInt("manshoes",0);
+        int manaccessories=sharedPreferences.getInt("manaccessories",0);
+        man_hair.setImageResource(manhair);
+        man_clothes.setImageResource(manclothes);
+        man_shoes.setImageResource(manshoes);
+        man_Accessories.setImageResource(manaccessories);
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,17 +78,20 @@ public class MainActivity extends AppCompatActivity {
         Locale.setDefault(Locale.KOREAN);
 
         //시작일, 종료일 데이터 저장
+        init();
+        img_Upload();
+
         calendar = Calendar.getInstance();
         maxDate = Calendar.getInstance();
         currentYear = calendar.get(Calendar.YEAR);
         currentMonth = (calendar.get(Calendar.MONTH));
         currentDay = calendar.get(Calendar.DAY_OF_MONTH);
-        simple_CharMan =findViewById(R.id.simple_CharMan);
-        simple_CharWoman=findViewById(R.id.simple_CharWoman);
         maxDate.set(currentYear,currentMonth,currentDay);
 
-
         sharedPreferences =getSharedPreferences("pref",MODE_PRIVATE);
+        SharedPreferences.Editor editor =sharedPreferences.edit();
+        String woman_name =sharedPreferences.getString("woman_name","여자");
+        String man_name =sharedPreferences.getString("man_name","남자");
         d_result=sharedPreferences.getLong("result",0);
         int year=sharedPreferences.getInt("year",0);
         int monthOfYear= sharedPreferences.getInt("monthOfYear",0);
@@ -60,14 +100,16 @@ public class MainActivity extends AppCompatActivity {
         int cmonth= sharedPreferences.getInt("cmonth",currentMonth+1);
         int cday=sharedPreferences.getInt("cday",currentDay);
          String d_now=cyear+""+cmonth+""+cday+"";
-        Log.d("hhhh",""+cyear+cmonth+cday);
-        Log.d("hhhh",""+currentYear+(currentMonth+1)+currentDay);
         String now=currentYear+""+(currentMonth+1)+""+currentDay+"";
+        char_Woman.setText(woman_name);
+        char_man.setText(man_name);
+
+
+
 
 
         if (!(d_now.equals(now))){
           d_result+=1;
-          SharedPreferences.Editor editor =sharedPreferences.edit();
           editor.putInt("cyear",currentYear);
           editor.putInt("cmonth",currentMonth+1);
           editor.putInt("cday",currentDay);
@@ -75,16 +117,10 @@ public class MainActivity extends AppCompatActivity {
           editor.commit();
         }
 
-        datePicker = findViewById(R.id.datePicker);
-        edit_endDateBtn =findViewById(R.id.edit_endDateBtn);
-        edit_result =  findViewById(R.id.edit_result);
-
-
         if(d_result>0) {
             d_result=sharedPreferences.getLong("result",0);
             edit_result.setText("우리가 사랑 한지 : D+" + d_result);
             edit_endDateBtn.setText("우리가 만난 날짜 : " +year + "년 " + monthOfYear  + "월 " + dayOfMonth + "일");
-            Log.d("hhhh",""+year+monthOfYear+dayOfMonth);
         }
 
         // 디데이 날짜 입력
