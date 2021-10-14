@@ -1,15 +1,21 @@
 package com.example.characterproject;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -29,9 +35,21 @@ public class MainActivity extends AppCompatActivity {
     ImageView simple_CharMan,man_hair,man_clothes,man_shoes,man_Accessories;
     ImageView simple_CharWoman,woman_hair,woman_clothes,woman_shoes,woman_Accessories;
     TextView char_man,char_Woman;
+    int womanhair;
+    int manhair;
+    Button btn_update;
+    long pressedTime =0;
+    Button btn_picture;
+
+    String  databaseName ="dataDB";
+    String databseTable = "datatbl";
+    SQLiteDatabase db;
+    DBHelper dbHelper;
 
 
     public void init( ){
+        dbHelper =new DBHelper(this,databaseName,null,1,databseTable);
+        db =dbHelper.getWritableDatabase();
         simple_CharMan =findViewById(R.id.simple_CharMan);
         man_hair=findViewById(R.id.man_hair);
         man_clothes=findViewById(R.id.man_clothes);
@@ -47,11 +65,13 @@ public class MainActivity extends AppCompatActivity {
         edit_result =  findViewById(R.id.edit_result);
         char_man =findViewById(R.id.char_man);
         char_Woman=findViewById(R.id.char_Woman);
-    }
+        btn_update=findViewById(R.id.btn_update);
+        btn_picture=findViewById(R.id.btn_picture_save);
 
+    }
     public void img_Upload(){
         sharedPreferences =getSharedPreferences("pref",MODE_PRIVATE);
-        int womanhair=sharedPreferences.getInt("womanhair",0);
+        womanhair=sharedPreferences.getInt("womanhair",0);
         int womanclothes=sharedPreferences.getInt("womanclothes",0);
         int womanshoes=sharedPreferences.getInt("womanshoes",0);
         int womanaccessories=sharedPreferences.getInt("womanaccessories",0);
@@ -60,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         woman_shoes.setImageResource(womanshoes);
         woman_Accessories.setImageResource(womanaccessories);
 
-        int manhair=sharedPreferences.getInt("manhair",0);
+        manhair=sharedPreferences.getInt("manhair",0);
         int manclothes=sharedPreferences.getInt("manclothes",0);
         int manshoes=sharedPreferences.getInt("manshoes",0);
         int manaccessories=sharedPreferences.getInt("manaccessories",0);
@@ -80,6 +100,10 @@ public class MainActivity extends AppCompatActivity {
         //시작일, 종료일 데이터 저장
         init();
         img_Upload();
+
+        ActivityCompat.requestPermissions(this,new String[]{
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE
+        },0);
 
         calendar = Calendar.getInstance();
         maxDate = Calendar.getInstance();
@@ -104,9 +128,15 @@ public class MainActivity extends AppCompatActivity {
         char_Woman.setText(woman_name);
         char_man.setText(man_name);
 
+        if(womanhair!=0||manhair!=0){
+            btn_update.setText("캐릭터 수정");
+            btn_update.setEnabled(true);
+        }
 
-
-
+        btn_update.setOnClickListener(view -> {
+            womanhair=0;
+            manhair=0;
+        });
 
         if (!(d_now.equals(now))){
           d_result+=1;
@@ -123,8 +153,12 @@ public class MainActivity extends AppCompatActivity {
             edit_endDateBtn.setText("우리가 만난 날짜 : " +year + "년 " + monthOfYear  + "월 " + dayOfMonth + "일");
         }
 
-        // 디데이 날짜 입력
+        btn_picture.setOnClickListener(v -> {
+            Intent intent =new Intent(MainActivity.this,SaveActivity.class);
+            startActivity(intent);
+        });
 
+        // 디데이 날짜 입력
 
         //datePicker : 디데이 날짜 입력하는 버튼, 클릭시 DatePickerDialog 띄우기
         datePicker.setOnClickListener(new View.OnClickListener() {
@@ -140,13 +174,17 @@ public class MainActivity extends AppCompatActivity {
         simple_CharWoman.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent =new Intent(MainActivity.this,WomanActivity.class);
-                startActivity(intent);
+                if(womanhair==0) {
+                    Intent intent = new Intent(MainActivity.this, WomanActivity.class);
+                    startActivity(intent);
+                }
             }
         });
         simple_CharMan.setOnClickListener(v -> {
-            Intent intent =new Intent(MainActivity.this,ManActivity.class);
-            startActivity(intent);
+            if(manhair==0) {
+                Intent intent = new Intent(MainActivity.this, ManActivity.class);
+                startActivity(intent);
+            }
         });
     }
 
@@ -236,6 +274,33 @@ public class MainActivity extends AppCompatActivity {
         result = onCalculatorDate(dateEndY, dateEndM, dateEndD);
         return result;
     }
+
+    @Override
+    public void onBackPressed() {
+        if ( pressedTime == 0 ) {
+            Toast.makeText(getApplicationContext(), " 한 번 더 누르면 종료됩니다." , Toast.LENGTH_LONG).show();
+            pressedTime = System.currentTimeMillis();
+        }
+        else {
+            int seconds = (int) (System.currentTimeMillis() - pressedTime);
+
+            if ( seconds > 2000 ) {
+                Toast.makeText(getApplicationContext(), " 한 번 더 누르면 종료됩니다." , Toast.LENGTH_LONG).show();
+                pressedTime = 0 ;
+            }
+            else {
+                ActivityCompat.finishAffinity(this);
+                System.exit(0);
+            }
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        dbHelper.close();
+        super.onDestroy();
+    }
+
 
 
 }

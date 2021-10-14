@@ -49,6 +49,7 @@ public class ManActivity extends AppCompatActivity implements View.OnClickListen
                 image_set(img_man_hair,R.drawable.man_hair1);
                 setPr("manhair",R.drawable.man_hair1);
                 break;
+
             case R.id.change_manHair2 :
                 image_set(img_man_hair,R.drawable.man_hair2);
                 setPr("manhair",R.drawable.man_hair2);
