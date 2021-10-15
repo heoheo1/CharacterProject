@@ -3,6 +3,7 @@ package com.example.characterproject;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,11 +63,23 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
 
         TextView contents;
         ImageView imageView;
-
+        ImageView img_comment;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             this.contents = itemView.findViewById(R.id.txt_card_contents);
             imageView = itemView.findViewById(R.id.card_image);
+            img_comment =itemView.findViewById(R.id.img_comment);
+
+            img_comment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent =new Intent(context,CommentActivity.class);
+                    int i =getAdapterPosition();
+                    intent.putExtra("id", i);
+                    Log.d("ddddd", i+"");
+                    context.startActivity(intent);
+                }
+            });
 
 
         }

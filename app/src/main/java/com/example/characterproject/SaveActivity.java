@@ -34,7 +34,7 @@ public class SaveActivity extends AppCompatActivity {
 
         dbHelper =new DBHelper(this,databaseName,null,1,databseTable);
         db =dbHelper.getWritableDatabase();
-
+        recyclerView =findViewById(R.id.recyclerView);
         itemArrayList =new ArrayList();
         adapter =new MyAdapter(this,itemArrayList);
 
@@ -50,9 +50,6 @@ public class SaveActivity extends AppCompatActivity {
 
             }
         });
-        recyclerView =findViewById(R.id.recyclerView);
-        itemArrayList =new ArrayList();
-        adapter =new MyAdapter(this,itemArrayList);
 
         String query = "SELECT * FROM " +databseTable; //테이블을 조회
         cursor = db.rawQuery(query, null); //가리킨다. rawQuery 커서를 가리킨다.
