@@ -68,21 +68,21 @@ public class CommentActivity extends AppCompatActivity {
             listview.setAdapter(arrayadapter);
         }
 
-            comment = edt_write.getText().toString();
             btn_Okey.setOnClickListener(v -> {
                 //리스트뷰에 추가
-                String query = "SELECT * FROM " + databseTable; //테이블을 조회
+                String query = "SELECT * FROM " +  "member" + id; //테이블을 조회
                 cursor = db.rawQuery(query, null); //가리킨다. rawQuery 커서를 가리킨다.
                 comment = edt_write.getText().toString();
+                if(!(comment.isEmpty())) {
+                    contentValues = new ContentValues();
+                    contentValues.put("Comment", comment);
+                    db.insert("member" + id, null, contentValues); //테이블에 데이터를 생성
+                }
                 while (cursor.moveToNext()) {//while문을 통해 커서를 하나씩 하나씩 가르킨다.
                     intent = getIntent();
                     id = intent.getIntExtra("id", 0);
                     dbID = cursor.getInt(0);
                     if (id == dbID - 1) {
-
-                        contentValues = new ContentValues();
-                        contentValues.put("Comment", comment);
-                        db.insert("member" + id, null, contentValues); //테이블에 데이터를 생성
                         Log.d("dddddddd", dbID + "");
                         list.add(comment);
                         listview.setAdapter(arrayadapter);
