@@ -59,46 +59,51 @@
 
     <ImageView
         android:id="@+id/simple_CharWoman"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="0dp"
         android:layout_width="185dp"
         android:layout_height="270dp"
         android:layout_marginTop="20dp"
+        app:layout_constraintRight_toRightOf="parent"
         android:src="@drawable/simple_char"
         app:layout_constraintLeft_toRightOf="@+id/simple_CharMan"
         app:layout_constraintTop_toBottomOf="@+id/btn_update" />
 
     <ImageView
         android:id="@+id/woman_hair"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="0dp"
         android:layout_width="185dp"
         android:layout_height="270dp"
         android:layout_marginTop="20dp"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/man_hair"
         app:layout_constraintTop_toBottomOf="@+id/btn_update" />
     <ImageView
         android:id="@+id/woman_clothes"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="0dp"
         android:layout_width="185dp"
         android:layout_height="270dp"
         android:layout_marginTop="20dp"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/man_clothes"
         app:layout_constraintTop_toBottomOf="@+id/btn_update" />
 
     <ImageView
         android:id="@+id/woman_shoes"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="0dp"
         android:layout_width="185dp"
         android:layout_height="270dp"
         android:layout_marginTop="20dp"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/man_shoes"
         app:layout_constraintTop_toBottomOf="@+id/btn_update" />
 
     <ImageView
         android:id="@+id/woman_Accessories"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="0dp"
         android:layout_width="185dp"
         android:layout_height="270dp"
         android:layout_marginTop="20dp"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/man_Accessories"
         app:layout_constraintTop_toBottomOf="@+id/btn_update" />
 
@@ -107,8 +112,8 @@
         android:id="@+id/char_man"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="56dp"
-        android:layout_marginLeft="56dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginLeft="40dp"
         android:layout_marginTop="48dp"
         android:background="@drawable/edt_color"
         android:textSize="18dp"
@@ -129,20 +134,22 @@
         android:id="@+id/char_Woman"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginLeft="30dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginLeft="36dp"
+        android:layout_marginRight="40dp"
         android:layout_marginTop="48dp"
         android:background="@drawable/edt_color"
-        android:textSize="18dp"
-        android:textStyle="bold"
-        android:fontFamily="@font/cafe24_oneprettynight"
         android:elevation="5dp"
         android:ems="5"
+        android:fontFamily="@font/cafe24_oneprettynight"
         android:gravity="center"
         android:maxEms="5"
         android:padding="5dp"
         android:singleLine="true"
         android:text="여자"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toEndOf="@+id/datePicker"
         app:layout_constraintTop_toBottomOf="@+id/simple_CharWoman" />
 
@@ -150,9 +157,9 @@
         android:id="@+id/datePicker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginLeft="36dp"
+        android:layout_marginTop="44dp"
         android:background="@drawable/love"
         app:layout_constraintStart_toEndOf="@+id/char_man"
         app:layout_constraintTop_toBottomOf="@+id/simple_CharMan" />
